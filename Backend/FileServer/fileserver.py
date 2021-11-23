@@ -1,9 +1,9 @@
 from flask import Flask, render_template, request
 from werkzeug.utils import secure_filename
 import os, sys
-# sys.path.append(os.path.join(os.path.abspath(__file__), "SheetsDB"))
-sys.path.append('./SheetsDB')
-from streams_jsonprocessor import *
+sys.path.append(os.path.join(sys.path[0], "SheetsDB"))
+# sys.path.append('./SheetsDB')
+from streams_jsonprocessor import JSONProcessor
 
 app = Flask(__name__)
 

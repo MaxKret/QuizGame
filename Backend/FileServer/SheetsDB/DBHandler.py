@@ -56,15 +56,7 @@ class DBHandler:
 
 
 def main():
-	db_handler = DBHandler()
-	db_handler.choose_sheet(0)
-
-	file = None
-	with open(sys.stdin) as std_in:
-			file = std_in
-	db_handler.import_json_record(file)
-	db_handler.import_json_record(file)
-
+	pass
 
 if __name__ == '__main__':
 	main()

@@ -23,7 +23,7 @@ def import_json(email, file_name):
    db_handler = DBHandler()
    db_handler.choose_sheet(0)
    if db_handler.find_file(file_name):
-      # db_handler.import_json_record(user_email=email)
+      db_handler.import_json_record(user_email=email)
       print("File Found fileserver.py")
 
 

@@ -5,6 +5,7 @@ sys.path.append(os.path.join(sys.path[0], "SheetsDB"))
 
 app = Flask(__name__)
 
+# Routes
 @app.route('/')
 def upload_page():
    return render_template('upload.html')
@@ -18,14 +19,14 @@ def upload_file():
       import_json(email=user_email, file_name=f_name)
       return f'file {f_name} uploaded successfully'
 
-def import_json(email, file_name):
+# Functions
+def import_json(email, file_name) -> None:
    from DBHandler import DBHandler
    db_handler = DBHandler()
    db_handler.choose_sheet(0)
    if db_handler.find_file(file_name):
       db_handler.import_json_record(user_email=email)
       print("SHEETSDB DONE UPLOADING AND UPDATING RECORD")
-
 
 
 if __name__ == "__main__":

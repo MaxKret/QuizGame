@@ -13,7 +13,7 @@ class DBHandler:
 	list_file_json = None
 
 
-	def __init__(self):
+	def __init__(self) -> None:
 		# define the scope
 		scope = ['https://spreadsheets.google.com/feeds','https://www.googleapis.com/auth/drive']
 		# add credentials to the account
@@ -26,11 +26,16 @@ class DBHandler:
 		self.current_record = []
 
 
-	def choose_sheet(self, id):
+	def choose_sheet(self, id: int) -> None:
+		'''
+		ID: int, starting at 0
+		0: Main Sheet
+		1: nothing yet!
+		'''
 		self.sheet_instance = self.spreadsheet.get_worksheet(id)
 
 
-	def insert_record(self, record: dict):
+	def insert_record(self, record: dict) -> None:
 		if foundcell := self.sheet_instance.find(list(record.keys())[0], in_row=1) : # record exists in table
 			idx = foundcell.address
 			print("RECORD FOUND AT", idx, ". UPDATING...")
@@ -43,14 +48,14 @@ class DBHandler:
 			else:
 				print("NO AVAILABLE SLOTS FOUND")
 
-	def add_record(self, record: dict, idx: str):
+	def add_record(self, record: dict, idx: str) -> None:
 		# convert the json to dataframe
 		record_df = pd.DataFrame.from_dict(record)
 		# update cell 1 with header, and cells 2+ with stream json objects
 		self.sheet_instance.update_acell(idx, str(record_df.columns.values.tolist()[0]))
 		self.sheet_instance.update(f"{idx[0]}{int(idx[1])+1}:{idx[0]}", [[str(y) for y in x] for x in record_df.values.tolist()])
 
-	def update_record(self, record: dict, idx: str):
+	def update_record(self, record: dict, idx: str) -> None:
 		self.delete_record(record, idx)
 		record_df = pd.DataFrame.from_dict(record)
 		data_only_idx = f"{idx[0]}{int(idx[1])+1}:{idx[0]}"
@@ -58,7 +63,7 @@ class DBHandler:
 		print("RECORD AT",idx,"UPDATED")
 
 
-	def delete_record(self, record: dict, idx: str):
+	def delete_record(self, record: dict, idx: str) -> None:
 		data_only_idx = f"{idx[0]}{int(idx[1])+1}:{idx[0]}"
 		self.sheet_instance.update(data_only_idx, [["" for y in x] for x in pd.DataFrame.from_dict(record).values.tolist()])
 		print("RECORD AT",idx,"DELETED")
@@ -89,7 +94,7 @@ class DBHandler:
 		else:
 			return False
 
-	def import_json_record(self, user_email):
+	def import_json_record(self, user_email) -> None:
 		JSON_Processor = JSONProcessor(in_list=self.list_file_json)
 		streams_list = JSON_Processor.streams_json_list
 		streams_record = {user_email:streams_list}
@@ -100,7 +105,7 @@ class DBHandler:
 		else:
 			print("RECORD ALREADY SELECTED")
 
-	def export_json_record(self):
+	def export_json_record(self) -> None:
 		pass
 
 def main():

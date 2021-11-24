@@ -8,7 +8,7 @@ class JSONProcessor():
 	streams_json_list: list
 
 
-	def __init__(self, in_list, _out_file=False):
+	def __init__(self, in_list, _out_file=False) -> None:
 		'''
 		TAKES IN A LIST OF JSON OBJECTS.
 		default sets out_file to False, keep this unless you require only a file output.

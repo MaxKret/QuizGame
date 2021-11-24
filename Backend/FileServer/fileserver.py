@@ -12,21 +12,20 @@ def upload_page():
 @app.route('/uploader', methods = ['GET', 'POST'])
 def upload_file():
    if request.method == 'POST':
-      f = request.files['file']
-      f.save(os.path.join("SheetsDB", secure_filename(f.filename)))
-      import_json()
-      return 'file uploaded successfully'
+      f, f_name = (request.files['file'], request.files['file'].filename)
+      f.save(os.path.join(os.path.abspath(os.path.dirname(__file__)), "SheetsDB", secure_filename(f.filename)))
+      user_email = request.form['email']
+      import_json(email=user_email, file_name=f_name)
+      return f'file {f_name} uploaded successfully'
 
-def import_json():
+def import_json(email, file_name):
    from DBHandler import DBHandler
    db_handler = DBHandler()
    db_handler.choose_sheet(0)
+   if db_handler.find_file(file_name):
+      # db_handler.import_json_record(user_email=email)
+      print("File Found fileserver.py")
 
-   file = None
-   with open(sys.stdin) as std_in:
-         file = std_in
-   db_handler.import_json_record(file)
-   db_handler.import_json_record(file)
 
 
 if __name__ == "__main__":

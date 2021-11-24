@@ -5,16 +5,16 @@ from collections import Counter
 
 class JSONProcessor():
 
-	json_file_in: TextIOWrapper
+	json_list_in: list
 	streams_json_list: list
 
 
-	def __init__(self, in_file, _out_file=False):
+	def __init__(self, in_list, _out_file=False):
 		'''
 		default sets out_file to False, keep this unless you require only a file output.
 		otherwise set to True
 		'''
-		self.json_file_in = in_file
+		self.json_list_in = in_list
 		self.process_streams_JSON()
 
 		if _out_file:
@@ -24,8 +24,8 @@ class JSONProcessor():
 
 
 	def process_streams_JSON(self) -> None:
-		# load json into dict
-		streamsDictList = json.load(self.json_file_in)
+		# load json into dict list
+		streamsDictList = self.json_list_in
 
 		# remove unused timecode field
 		for x in streamsDictList: x.pop("endTime", None)

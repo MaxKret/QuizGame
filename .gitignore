@@ -1,6 +1,6 @@
 # created by virtualenv automatically
 *.json
-__pycache__
+__pycache__/*
 pyvenv.cfg
 Lib
 Scripts

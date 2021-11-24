@@ -1,8 +1,7 @@
 # importing the required libraries
 import json, sys, os
-from flask.json.tag import PassDict
 import pandas as pd
-import gspread
+import gspread, gspread.utils
 from oauth2client.service_account import ServiceAccountCredentials
 sys.path.append(".")
 from streams_jsonprocessor import JSONProcessor
@@ -31,22 +30,41 @@ class DBHandler:
 		self.sheet_instance = self.spreadsheet.get_worksheet(id)
 
 
-	def add_record(self, record: dict):
+	def insert_record(self, record: dict):
+		if foundcell := self.sheet_instance.find(list(record.keys())[0]) : # record exists in table
+			idx = foundcell.address
+			print("record found at" ,idx)
+			self.update_record(record, idx)
+		else: # record not in table
+			idx = self.sheet_instance.find("", in_row=1).address
+			print("adding record at", idx)
+			self.add_record(record, idx)
+
+	def add_record(self, record: dict, idx: str):
 		# convert the json to dataframe
 		record_df = pd.DataFrame.from_dict(record)
 		# update cell 1 with header, and cells 2+ with stream json objects
-		self.sheet_instance.update_acell("C1", str(record_df.columns.values.tolist()[0]))
-		self.sheet_instance.update('C2:C', [[str(y) for y in x] for x in record_df.values.tolist()])
+		self.sheet_instance.update_acell(idx, str(record_df.columns.values.tolist()[0]))
+		self.sheet_instance.update(f"{idx[0]}{int(idx[1])+1}:{idx[0]}", [[str(y) for y in x] for x in record_df.values.tolist()])
 		print()
 
-	def delete_record(self, record: dict):
+	def update_record(self, record: dict, idx: str):
+		self.delete_record(idx)
+		record_df = pd.DataFrame.from_dict(record)
+		self.sheet_instance.update(f"{idx[0]}{int(idx[1])+1}:{idx[0]}", [[str(y) for y in x] for x in record_df.values.tolist()])
+
+
+	def delete_record(self, idx: str):
+		data_only_idx = f"{idx[0]}{int(idx[1])+1}:{idx[0]}"
 		pass
 
-	def find_record(self, record: dict):
+	def find_record_by_record(self, record: dict):
 		pass
-
-	def update_record(self, record: dict):
+	def find_record_by_email(self, email: str):
 		pass
+	def find_record_by_idx(self, idx: str):
+		pass
+	
 
 
 	def find_file(self, filename) -> bool:
@@ -65,7 +83,7 @@ class DBHandler:
 		if( streams_record is not self.current_record):
 			self.current_record = streams_record
 			print("New Record selected")
-			self.add_record(self.current_record)
+			self.insert_record(self.current_record)
 		else:
 			print("Record already selected")
 

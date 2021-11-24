@@ -33,12 +33,15 @@ class DBHandler:
 	def insert_record(self, record: dict):
 		if foundcell := self.sheet_instance.find(list(record.keys())[0]) : # record exists in table
 			idx = foundcell.address
-			print("record found at" ,idx)
+			print("RECORD FOUND AT", idx, ". UPDATING...")
 			self.update_record(record, idx)
 		else: # record not in table
-			idx = self.sheet_instance.find("", in_row=1).address
-			print("adding record at", idx)
-			self.add_record(record, idx)
+			if first_blank := self.sheet_instance.find("", in_row=1):
+				idx = first_blank.address
+				print("ADDING NEW RECORD AT", idx)
+				self.add_record(record, idx)
+			else:
+				print("NO AVAILABLE SLOTS FOUND")
 
 	def add_record(self, record: dict, idx: str):
 		# convert the json to dataframe
@@ -52,13 +55,13 @@ class DBHandler:
 		record_df = pd.DataFrame.from_dict(record)
 		data_only_idx = f"{idx[0]}{int(idx[1])+1}:{idx[0]}"
 		self.sheet_instance.update(data_only_idx, [[str(y) for y in x] for x in record_df.values.tolist()])
-		print("record updated")
+		print("RECORD AT",idx,"UPDATED")
 
 
 	def delete_record(self, record: dict, idx: str):
 		data_only_idx = f"{idx[0]}{int(idx[1])+1}:{idx[0]}"
 		self.sheet_instance.update(data_only_idx, [["" for y in x] for x in pd.DataFrame.from_dict(record).values.tolist()])
-		print("record deleted")
+		print("RECORD AT",idx,"DELETED")
 	
 	
 	def find_record_by_email(self, email: str) -> dict:
@@ -70,7 +73,7 @@ class DBHandler:
 
 	def find_file(self, filename) -> bool:
 		if os.path.exists(os.path.join(os.path.abspath(os.path.dirname(__file__)), filename)):
-			print("File Found DBHandler.py")
+			print("FILE",filename,"FOUND")
 			with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), filename)) as openfile:
 				self.list_file_json = json.load(openfile)
 			os.remove(os.path.join(os.path.abspath(os.path.dirname(__file__)), filename))
@@ -84,10 +87,10 @@ class DBHandler:
 		streams_record = {user_email:streams_list}
 		if( streams_record is not self.current_record):
 			self.current_record = streams_record
-			print("New Record selected")
+			print("ATTEMPTING TO ADD NEW RECORD")
 			self.insert_record(self.current_record)
 		else:
-			print("Record already selected")
+			print("RECORD ALREADY SELECTED")
 
 	def export_json_record(self):
 		pass

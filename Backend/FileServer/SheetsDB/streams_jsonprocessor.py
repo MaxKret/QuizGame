@@ -1,4 +1,3 @@
-from io import TextIOWrapper
 import json
 from datetime import datetime
 from collections import Counter
@@ -11,6 +10,7 @@ class JSONProcessor():
 
 	def __init__(self, in_list, _out_file=False):
 		'''
+		TAKES IN A LIST OF JSON OBJECTS.
 		default sets out_file to False, keep this unless you require only a file output.
 		otherwise set to True
 		'''
@@ -34,13 +34,13 @@ class JSONProcessor():
 		# count track name occurences
 		streamsFreqDict = {x[0]:x[1] for x in Counter([jsonobject["trackName"] for jsonobject in streamsDictList]).most_common()}
 		
-		# reconstruct json dict with names, 
+		# reconstruct json dict with names so we can insert occurences, 
 		# add 'numPlays field',
 		# and remove json objects, ignoring names
 		namedStreamsDict = {jsonobject["trackName"]:jsonobject for jsonobject in streamsDictList}
 		for (key,value) in namedStreamsDict.items():
 			namedStreamsDict[key]["numPlays"] = streamsFreqDict[key]		
-		streamsDictListUsable = [x[1] for x in namedStreamsDict.items()]
+		streamsDictListUsable = sorted([x[1] for x in namedStreamsDict.items()], key=lambda x: x['numPlays'], reverse=True)
 		
 		# set streams_dict attr when done
 		self.streams_json_list = streamsDictListUsable

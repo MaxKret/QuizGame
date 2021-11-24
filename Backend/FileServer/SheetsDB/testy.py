@@ -16,4 +16,6 @@ sheet_instance = spreadsheet.get_worksheet(0)
 
 cell = sheet_instance.find("", in_row=1)
 idx = cell.address
-print(f"{idx[0]}{int(idx[1])+1}:{idx[0]}")
+data_only_idx = f"{idx[0]}{int(idx[1])+1}:{idx[0]}"
+sheet_instance.update(data_only_idx, "")
+

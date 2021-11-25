@@ -1,1 +1,0 @@
-py server.py --tcpport 2023 --udpport 2023 --capacity 3

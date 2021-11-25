@@ -1,7 +1,15 @@
-# created by virtualenv automatically
+# secrets and userdata
 *.json
+
+# caching and compiled
 __pycache__/
 __pycache__/*
+
+# venv
 pyvenv.cfg
 Lib
 Scripts
+
+# idk
+randomcrap
+randomcrap/*

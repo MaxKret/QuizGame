@@ -1,3 +1,6 @@
+'''
+Max's DBHandler
+'''
 # importing the required libraries
 import json, sys, os, ast
 import pandas as pd
@@ -8,12 +11,18 @@ from streams_jsonprocessor import JSONProcessor
 
 
 class DBHandler:
+	'''
+	class for handling Sheets DB
+	'''
 
 	current_record: dict
 	list_file_json = None
 
 
 	def __init__(self) -> None:
+		'''
+		creates self.spreadsheet to manipulate DB sheet
+		'''
 		# define the scope
 		scope = ['https://spreadsheets.google.com/feeds','https://www.googleapis.com/auth/drive']
 		# add credentials to the account

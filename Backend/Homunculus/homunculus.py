@@ -1,7 +1,6 @@
 from flask import Flask, jsonify, request
 import os, sys
-sys.path.append(os.path.join(sys.path[0], "SheetsDB"))
-# sys.path.append(os.path.join(sys.path[0], "..", "SheetsDB"))
+sys.path.append(os.path.join(sys.path[0], "..", "FileServer", "SheetsDB"))
 
 app = Flask(__name__)
 
@@ -12,35 +11,32 @@ def index():
 
 
 # Functions
-def request_DB_Record(email: str) -> tuple[list, dict]:
+def request_DB_Record(email: str) -> tuple[list[dict], dict]:
     from DBHandler import DBHandler
     record: dict
-    record_streams: list
+    record_all_streams: list[dict]
     DB = DBHandler()
     DB.choose_sheet(0)
     record = DB.find_record_by_email(email)
-    record_streams = record[email]
-    return record_streams, record
+    record_all_streams = record[email]
+    return record_all_streams, record
 
 def idkyet():
-    NumPlayers: int
-    UserEmails: list
+    UserEmails: list[str]
     TotalNumQuestions: int
     TopNSongs: int
     UserRecords: list[dict]
 
-    UserEmails = ["maxwellkret@gmail.com", "savvysra@yahoo.com"]
+    UserEmails = ["maxwellkret@gmail.com", "notmaxwellkret@gmail.com"]
 
-    UserRecords1 = [request_DB_Record(email)[1] for email in UserEmails]
-    print()
+    UserRecords = [request_DB_Record(email)[1] for email in UserEmails]
 
-    UserRecords2 = []
-    for email in UserEmails:
-        UserRecords2.append(request_DB_Record(email)[1])
-    print()
+    TopNSongs = 5
 
-    assert(UserRecords1 is UserRecords2)
-    print()
+    UserRecords = [{key:value[:TopNSongs] for (key, value) in record.items()} for record in UserRecords]
+
+    TotalNumQuestions = len(UserEmails) * TopNSongs
+    
 
 
 

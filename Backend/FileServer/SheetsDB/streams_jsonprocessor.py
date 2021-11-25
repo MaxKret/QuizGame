@@ -25,10 +25,13 @@ class JSONProcessor():
 
 	def process_streams_JSON(self) -> None:
 		# load json into dict list
+		streamsDictList: list[dict]
 		streamsDictList = self.json_list_in
 
-		# remove unused timecode field
-		for x in streamsDictList: x.pop("endTime", None)
+		# remove unused timecode fields
+		for x in streamsDictList: 
+			x.pop("endTime", None)
+			x.pop("msPlayed", None)
 		
 		# get frequencies:
 		# count track name occurences

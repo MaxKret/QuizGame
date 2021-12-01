@@ -96,7 +96,7 @@ class DBHandler:
 	def find_file(self, filename) -> bool:
 		if os.path.exists(os.path.join(os.path.abspath(os.path.dirname(__file__)), filename)):
 			print("FILE",filename,"FOUND")
-			with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), filename)) as openfile:
+			with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), filename), encoding="utf8") as openfile:
 				self.list_file_json = json.load(openfile)
 			os.remove(os.path.join(os.path.abspath(os.path.dirname(__file__)), filename))
 			return True

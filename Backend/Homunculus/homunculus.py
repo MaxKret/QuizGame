@@ -32,7 +32,7 @@ def idkyet():
     UserRecords = [request_DB_Record(email)[1] for email in UserEmails]
 
     TopNSongs = 5
-
+    #                   grab only Top n Songs
     UserRecords = [{key:value[:TopNSongs] for (key, value) in record.items()} for record in UserRecords]
 
     TotalNumQuestions = len(UserEmails) * TopNSongs

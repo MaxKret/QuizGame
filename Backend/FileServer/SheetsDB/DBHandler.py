@@ -23,17 +23,22 @@ class DBHandler:
 		'''
 		creates self.spreadsheet to manipulate DB sheet
 		'''
-		# define the scope
-		scope = ['https://spreadsheets.google.com/feeds','https://www.googleapis.com/auth/drive']
-		# add credentials to the account
-		creds = ServiceAccountCredentials.from_json_keyfile_name(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'service_account.json'), scope)
+		creds = self.get_creds(scopes=['https://spreadsheets.google.com/feeds','https://www.googleapis.com/auth/drive'], )
+
 		# authorize the clientsheet 
 		self.client = gspread.authorize(creds)
 		# get the instance of the Spreadsheet
 		self.spreadsheet = self.client.open('DB 1.0')
-
+		
 		self.current_record = []
 
+
+	def get_creds(self, scopes):
+		# define the scope
+		scope = scopes
+		# add credentials to the account
+		return ServiceAccountCredentials.from_json_keyfile_name(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'service_account.json'), scope)
+		
 
 	def choose_sheet(self, id: int) -> None:
 		'''

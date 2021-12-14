@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, request
-import os, sys
+import os, sys, random
+from userquestion import user_check
 sys.path.append(os.path.join(sys.path[0], "..", "FileServer", "SheetsDB"))
 
 app = Flask(__name__)
@@ -21,22 +22,39 @@ def request_DB_Record(email: str) -> tuple[list[dict], dict]:
     record_all_streams = record[email]
     return record_all_streams, record
 
-def idkyet():
+def GetFinalQuestionList(UserEmails: list[str]) -> list[dict]:
     UserEmails: list[str]
     TotalNumQuestions: int
+    QuestionsPerUser: int
+    numUsers: int
     TopNSongs: int
     UserRecords: list[dict]
+    FinalQuestionList: list[dict]
+    
+    UserEmails = ["maxwellkret@gmail.com", "katiemiller@gmail.com"]
 
-    UserEmails = ["maxwellkret@gmail.com", "notmaxwellkret@gmail.com"]
+
+    TotalNumQuestions = 10
+    numUsers = len(UserEmails)
+
+    FinalQuestionList = []
+    QuestionsPerUser = int(TotalNumQuestions / numUsers)
 
     UserRecords = [request_DB_Record(email)[1] for email in UserEmails]
 
-    TopNSongs = 5
+    TopNSongs = lambda leng: int(leng/4) 
     #                   grab only Top n Songs
-    UserRecords = [{key:value[:TopNSongs] for (key, value) in record.items()} for record in UserRecords]
+    UserRecords = [{key:value[:TopNSongs(len(value))] for (key, value) in record.items()} for record in UserRecords]
 
-    TotalNumQuestions = len(UserEmails) * TopNSongs
-    
+    for i in range(numUsers):
+        streams = [value for (key, value) in UserRecords[i].items()][0]
+        FinalQuestionList.append({UserEmails[i]: streams[0]})
+        for _ in range(QuestionsPerUser-1):
+            randomint = random.randrange(len(streams))
+            questionstream = streams[randomint]
+            FinalQuestionList.append({UserEmails[i]: questionstream})
+
+    return FinalQuestionList
 
 
 

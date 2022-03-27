@@ -50,12 +50,14 @@ class DBHandler:
 
 
 	def insert_record(self, record: dict) -> None:
-		if foundcell := self.sheet_instance.find(list(record.keys())[0], in_row=1) : # record exists in table
+		foundcell = self.sheet_instance.find(list(record.keys())[0], in_row=1)
+		if foundcell : # record exists in table
 			idx = foundcell.address
 			print("RECORD FOUND AT", idx, ". UPDATING...")
 			self.update_record(record, idx)
 		else: # record not in table
-			if first_blank := self.sheet_instance.find("", in_row=1):
+			first_blank = self.sheet_instance.find("", in_row=1)
+			if first_blank:
 				idx = first_blank.address
 				print("ADDING NEW RECORD AT", idx)
 				self.add_record(record, idx)
@@ -85,14 +87,16 @@ class DBHandler:
 	
 	def find_record_by_email(self, email: str) -> dict:
 		#TODO add else branch for no record found
-		if found_record := self.sheet_instance.find(email, in_row=1):
+		found_record = self.sheet_instance.find(email, in_row=1)
+		if found_record:
 			idx = found_record.address
 			data_only_idx = f"{idx[0]}{int(idx[1])+1}:{idx[0]}"
 			return {email:[ast.literal_eval(x[0]) for x in self.sheet_instance.get_values(data_only_idx)]}
 
 	def find_record_by_idx(self, idx: str) -> dict:
 		#TODO add else branch for no record found
-		if email := self.sheet_instance.get(idx):
+		email = self.sheet_instance.get(idx)
+		if email:
 			data_only_idx = f"{idx[0]}{int(idx[1])+1}:{idx[0]}"
 			return {email:[ast.literal_eval(x[0]) for x in self.sheet_instance.get_values(data_only_idx)]}
 	

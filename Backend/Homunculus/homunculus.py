@@ -8,7 +8,7 @@ app = Flask(__name__)
 # Routes
 @app.route('/')
 def index():
-   return jsonify(200)
+   return jsonify(GetFinalQuestionList(["",""]))
 
 
 # Functions
@@ -56,8 +56,14 @@ def GetFinalQuestionList(UserEmails: list[str]) -> list[dict]:
 
     return FinalQuestionList
 
+def unit_test():
+    try:
+        assert GetFinalQuestionList(["",""]) == GetFinalQuestionList(["",""])
+    except Exception as e:
+        print(e)
 
 
 if __name__ == "__main__":
-    idkyet()
+    GetFinalQuestionList()
+    unit_test()
     app.run(debug=True)

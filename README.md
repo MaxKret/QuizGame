@@ -1,4 +1,5 @@
 # QuizGame
+WIP for a mobile quiz game based on guessing the number of plays a user has for a certain song.
 ## File Server
 Python code for creating a web portal to upload and json files of streaming history downloaded from Spotify
 ## Homunculus
